@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="index.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="matrix, dot product, calculator, JavaScript">
+    <meta name="author" content="Your Name">
+    <title>Matrix Dot Product Calculator</title>
+</head>
+<body>
+    <div class="container">
+        <form onsubmit="return false">
+        <table class="mol">
+            <thead>
+                <tr>
+                    <td>HF</td><td>QCISD(T)</td><td>MP2dz</td><td>MP2tz</td><td>ZPE</td><td>Corr.&#916;H</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    
+                        <td><input id="HF" type="text" required></td>
+                        <td><input id="QCISDT" type="text" required></td>
+                        <td><input id="MP2dz" type="text" required></td>
+                        <td><input id="MP2tz" type="text"  required></td>
+                        <td><input id="ZPE" type="text"  required></td>
+                        <td><input id="Corr" type="text"  required></td>
+                    
+                </tr>
+            </tbody>
+        </table>
+        <table class="atoms">
+            <thead>
+                <tr>
+                    <td style="color: white;">H</td><td style="color: rgb(240, 206, 168);">Li</td><td style="color: rgb(218, 240, 168);">Be</td><td style="color: rgb(212, 150, 248);">B</td>
+                    <td style="color: rgb(179, 178, 178);">C</td><td style="color: rgb(168, 235, 240);">N</td><td style="color: rgb(214, 117, 122);">O</td><td style="color: rgb(215, 50, 230);">F</td><td style="color: rgb(243, 221, 98);">Na</td><td style="color: rgb(8, 101, 207);">Mg</td>
+                    <td style="color: rgb(26, 148, 63);">Al</td><td style="color: rgb(200, 201, 197);">Si</td><td style="color: rgb(226, 44, 44);">P</td><td style="color: rgb(211, 233, 10);">S</td><td style="color: rgb(41, 228, 57);">Cl</td><td style="color: rgb(117, 110, 67);">Br</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input class="atbox" id="H" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="Li" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="Be" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="B" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="C" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="N" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="O" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="F" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="Na" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="Mg" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="Al" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="Si" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="P" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="S" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="Cl" type="number" value="0" placeholder="0"></td>
+                    <td><input class="atbox" id="Br" type="number" value="0" placeholder="0"></td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <div id="eq">
+            Eng = HF + a|b(QCISD(T) - HF) + c|d(MP2(aug-cc-pvTz) - MP2(aug-cc-pvDz))
+        </div>
+        <br><br>
+        <div id="box">
+            <div id="Par">
+                Parameters:
+                <div> 
+                <label for="a">a = </label>
+                <span id="a"></span>
+                </div>
+                <div>
+                    <label for="b">b = </label>
+                    <span id="b"></span>
+                </div>
+                <div>
+        
+                    <label for="c">c = </label>
+                    <span id="c"></span>
+                </div>
+                <div>
+                    <label for="d">d = </label>
+                    <span id="d"></span>
+                </div>
+            </div>
+            <br>
+            <div>
+                <label for="energy">Energy (Hartree):</label>
+                <span id="energy"></span>
+            </div>
+            <br>
+            <div>
+                <label for="atomization">Atomization energy (kcal/mol):</label>
+                <span id="atomization"></span>
+            </div>
+            <br>
+            <div>
+                <label for="enthalpy0">&#916;H<sub>f</sub>&deg;(0K):</label>
+                <span id="enthalpy0"></span>
+            </div>
+            <br>
+            <div>
+                <label for="enthalpy298">&#916;H<sub>f</sub>&deg;(298K):</label>
+                <span id="enthalpy298"></span>
+            </div>
+        </div>
+        <br> 
+        <button type="submit" class="button-59" id="go" onclick=compute()>Compute</button>
+    </div>
+</form>
+    <canvas id="demo-canvas"></canvas>
+</body>
+
+
+</html>
+<script>
+    async function compute(){
+        console.log('button pressed')
+        const v = {
+            atoms:[document.getElementById("H").value,
+            document.getElementById("Li").value,
+            document.getElementById("Be").value,
+            document.getElementById("B").value,
+            document.getElementById("C").value,
+            document.getElementById("N").value,
+            document.getElementById("O").value,
+            document.getElementById("F").value,
+            document.getElementById("Na").value,
+            document.getElementById("Mg").value,
+            document.getElementById("Al").value,
+            document.getElementById("Si").value,
+            document.getElementById("P").value,
+            document.getElementById("S").value,
+            document.getElementById("Cl").value,
+            document.getElementById("Br").value,],
+            HF:parseFloat(document.getElementById("HF").value),
+            QCISDT:parseFloat(document.getElementById("QCISDT").value),
+            MP2dz:parseFloat(document.getElementById("MP2dz").value),
+            MP2tz:parseFloat(document.getElementById("MP2tz").value),
+            ZPE:parseFloat(document.getElementById("ZPE").value),
+            Corr:parseFloat(document.getElementById("Corr").value),
+        }
+        
+        //const v = [0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 0, -0.9336541999999781, 0.38020419999986643, 1.3138583999998446, -0.3928951999999981, 0.4891216999999415, -0.44453250000003663, 0.8693258999998079, 0.005901000000000002, -0.00312, 0.07146230000000742, 0.8105545999999322, 180.48, 4.96]
+
+        await fetch('http://localhost:3000/compute', {
+            method:'POST',
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({data:v})
+
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+            })
+            .then(data => {
+            document.getElementById("a").innerHTML = data.parameters[0]
+            document.getElementById("b").innerHTML = data.parameters[1]
+            document.getElementById("c").innerHTML = data.parameters[2]
+            document.getElementById("d").innerHTML = data.parameters[3]
+            document.getElementById("energy").innerHTML = data.mol_eng
+            document.getElementById("atomization").innerHTML = data.atomization
+            document.getElementById("enthalpy0").innerHTML = data.enthalpy0 + '   kcal/mol'
+            document.getElementById("enthalpy298").innerHTML = data.enthalpy298 + '   kcal/mol'
+            document.getElementById("box").style.visibility = "visible"
+            console.log('Response from server:', data);
+            })
+            .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            });
+    }
+</script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
+<script>
+    (function() {
+
+var width, height,  canvas, ctx, points, target, animateHeader = true;
+
+// Main
+initHeader();
+initAnimation();
+addListeners();
+
+function initHeader() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    target = {x: width/2, y: height/2};
+
+    canvas = document.getElementById('demo-canvas');
+    canvas.width = width;
+    canvas.height = height;
+    ctx = canvas.getContext('2d');
+
+    // create points
+    points = [];
+    for(var x = 0; x < width; x = x + width/20) {
+        for(var y = 0; y < height; y = y + height/20) {
+            var px = x + Math.random()*width/20;
+            var py = y + Math.random()*height/20;
+            var p = {x: px, originX: px, y: py, originY: py };
+            points.push(p);
+        }
+    }
+
+    // for each point find the 5 closest points
+    for(var i = 0; i < points.length; i++) {
+        var closest = [];
+        var p1 = points[i];
+        for(var j = 0; j < points.length; j++) {
+            var p2 = points[j]
+            if(!(p1 == p2)) {
+                var placed = false;
+                for(var k = 0; k < 5; k++) {
+                    if(!placed) {
+                        if(closest[k] == undefined) {
+                            closest[k] = p2;
+                            placed = true;
+                        }
+                    }
+                }
+
+                for(var k = 0; k < 5; k++) {
+                    if(!placed) {
+                        if(getDistance(p1, p2) < getDistance(p1, closest[k])) {
+                            closest[k] = p2;
+                            placed = true;
+                        }
+                    }
+                }
+            }
+        }
+        p1.closest = closest;
+    }
+
+    // assign a circle to each point
+    for(var i in points) {
+        var c = new Circle(points[i], 2+Math.random()*2, 'rgba(255,255,255,0.3)');
+        points[i].circle = c;
+    }
+}
+
+// Event handling
+function addListeners() {
+    if(!('ontouchstart' in window)) {
+        window.addEventListener('mousemove', mouseMove);
+    }
+    window.addEventListener('scroll', scrollCheck);
+    window.addEventListener('resize', resize);
+}
+
+function mouseMove(e) {
+    var posx = posy = 0;
+    if (e.pageX || e.pageY) {
+        posx = e.pageX;
+        posy = e.pageY;
+    }
+    else if (e.clientX || e.clientY)    {
+        posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    target.x = posx;
+    target.y = posy;
+}
+
+function scrollCheck() {
+    if(document.body.scrollTop > height) animateHeader = false;
+    else animateHeader = true;
+}
+
+function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+}
+
+// animation
+function initAnimation() {
+    animate();
+    for(var i in points) {
+        shiftPoint(points[i]);
+    }
+}
+
+function animate() {
+    if(animateHeader) {
+        ctx.clearRect(0,0,width,height);
+        for(var i in points) {
+            // detect points in range
+            if(Math.abs(getDistance(target, points[i])) < 4000) {
+                points[i].active = 0.3;
+                points[i].circle.active = 0.6;
+            } else if(Math.abs(getDistance(target, points[i])) < 20000) {
+                points[i].active = 0.1;
+                points[i].circle.active = 0.3;
+            } else if(Math.abs(getDistance(target, points[i])) < 40000) {
+                points[i].active = 0.02;
+                points[i].circle.active = 0.1;
+            } else {
+                points[i].active = 0;
+                points[i].circle.active = 0;
+            }
+
+            drawLines(points[i]);
+            points[i].circle.draw();
+        }
+    }
+    requestAnimationFrame(animate);
+}
+
+function shiftPoint(p) {
+    TweenLite.to(p, 1+1*Math.random(), {x:p.originX-50+Math.random()*100,
+        y: p.originY-50+Math.random()*100, ease:Circ.easeInOut,
+        onComplete: function() {
+            shiftPoint(p);
+        }});
+}
+
+// Canvas manipulation
+function drawLines(p) {
+    if(!p.active) return;
+    for(var i in p.closest) {
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.closest[i].x, p.closest[i].y);
+        ctx.strokeStyle = 'rgba(156,217,249,'+ p.active+')';
+        ctx.stroke();
+    }
+}
+
+function Circle(pos,rad,color) {
+    var _this = this;
+
+    // constructor
+    (function() {
+        _this.pos = pos || null;
+        _this.radius = rad || null;
+        _this.color = color || null;
+    })();
+
+    this.draw = function() {
+        if(!_this.active) return;
+        ctx.beginPath();
+        ctx.arc(_this.pos.x, _this.pos.y, _this.radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = 'rgba(156,217,249,'+ _this.active+')';
+        ctx.fill();
+    };
+}
+
+// Util
+function getDistance(p1, p2) {
+    return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
+}
+
+})();
+</script>
+

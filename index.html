@@ -145,7 +145,7 @@
         
         //const v = [0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 0, -0.9336541999999781, 0.38020419999986643, 1.3138583999998446, -0.3928951999999981, 0.4891216999999415, -0.44453250000003663, 0.8693258999998079, 0.005901000000000002, -0.00312, 0.07146230000000742, 0.8105545999999322, 180.48, 4.96]
 
-        await fetch('http://localhost:3000/compute', {
+        await fetch('https://masters-backend.vercel.app/compute', {
             method:'POST',
             headers: {'Content-Type': 'application/json'},
             body:JSON.stringify({data:v})
